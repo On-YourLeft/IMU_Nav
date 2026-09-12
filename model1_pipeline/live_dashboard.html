@@ -24,7 +24,20 @@
         const chart = new Chart(ctx, {
             type: 'line',
             data: { labels: [], datasets: [{ label: 'Speed (km/h)', data: [], borderColor: '#38bdf8', borderWidth: 2 }] },
-            options: { responsive: true, maintainAspectRatio: false, animation: false }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                animation: false,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 60, // Adjust this maximum if your vehicle exceeds 60 km/h
+                        ticks: {
+                            stepSize: 5
+                        }
+                    }
+                }
+            }
         });
 
         const ws = new WebSocket("ws://localhost:8765");

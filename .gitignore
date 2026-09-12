@@ -2,11 +2,5 @@
 /check
 /model1_pipeline/dataset
 /model1_pipeline/__pycache__
-/model1_pipeline/model1_best.pth
-/model1_pipeline/model1_velocity_lean.onnx
-/model1_pipeline/model1_velocity_lean.onnx.data
-/model1_pipeline/model1_velocity_lean.onnx.index
-/model1_pipeline/model1_velocity_lean.onnx.meta
-/model1_pipeline/model1_velocity_lean.onnx.shape
 /model1_pipeline/normalization_stats.npz
 /model1_pipeline/pothole_test.png
