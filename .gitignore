@@ -2,5 +2,4 @@
 /check
 /model1_pipeline/dataset
 /model1_pipeline/__pycache__
-/model1_pipeline/normalization_stats.npz
 /model1_pipeline/pothole_test.png
