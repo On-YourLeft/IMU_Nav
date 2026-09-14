@@ -1,6 +1,7 @@
 import time
 import subprocess
 
+flag = 0
 def check_gps_signal():
     try:
         result = subprocess.run(
@@ -18,8 +19,12 @@ def run_gps_monitor():
         while True:
             gps_present = check_gps_signal()
             if gps_present:
+                flag = 0
+                print(flag)
                 print("connection present")
             else:
+                flag = 1
+                print(flag)
                 print("connection lost")
             time.sleep(0.2)
     except KeyboardInterrupt:
