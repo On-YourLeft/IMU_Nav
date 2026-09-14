@@ -1,0 +1,2168 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>SIH 26168 Live Fusion</title>
+
+
+  <!-- =====================================================
+       LEAFLET CSS
+       ===================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
+
+
+  <!-- =====================================================
+       STYLE
+       ===================================================== -->
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+
+      margin: 0;
+
+      background: #07111f;
+
+      color: #e8f0f8;
+
+      font:
+        14px
+        Arial,
+        sans-serif;
+    }
+
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
+    .h {
+
+      padding: 18px 24px;
+
+      background: #0b1727;
+
+      border-bottom:
+        1px solid
+        #20344c;
+
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      align-items:
+        center;
+    }
+
+
+    .t {
+
+      font-size: 22px;
+
+      font-weight: 800;
+    }
+
+
+    .s {
+
+      color: #91a7bd;
+
+      margin-top: 3px;
+    }
+
+
+    #status {
+
+      font-weight: 700;
+
+      color: #fbbf24;
+    }
+
+
+    /* =====================================================
+       MAIN
+       ===================================================== */
+
+    .wrap {
+
+      max-width: 1450px;
+
+      margin: auto;
+
+      padding: 18px;
+    }
+
+
+    /* =====================================================
+       TOP CARDS
+       ===================================================== */
+
+    .g {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 12px;
+    }
+
+
+    .card {
+
+      background: #0d1b2d;
+
+      border:
+        1px solid
+        #1d334b;
+
+      border-radius: 12px;
+
+      padding: 16px;
+    }
+
+
+    .lab {
+
+      color: #8da3ba;
+
+      font-size: 11px;
+
+      text-transform:
+        uppercase;
+
+      letter-spacing:
+        0.5px;
+    }
+
+
+    .val {
+
+      font-size: 30px;
+
+      font-weight: 800;
+
+      margin-top: 7px;
+    }
+
+
+    .val small {
+
+      font-size: 15px;
+
+      font-weight: 600;
+    }
+
+
+    /* =====================================================
+       MAIN GRID
+       ===================================================== */
+
+    .main {
+
+      display: grid;
+
+      grid-template-columns:
+        1.7fr 1fr;
+
+      gap: 14px;
+
+      margin-top: 14px;
+    }
+
+
+    /* =====================================================
+       MAP
+       ===================================================== */
+
+    #map {
+
+      height: 560px;
+
+      width: 100%;
+
+      border-radius: 9px;
+
+      overflow: hidden;
+
+      margin-top: 10px;
+    }
+
+
+    /* =====================================================
+       ANALYTICS
+       ===================================================== */
+
+    .grid2 {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 9px;
+    }
+
+
+    .item {
+
+      background: #091526;
+
+      border:
+        1px solid
+        #193049;
+
+      border-radius: 9px;
+
+      padding: 12px;
+
+      min-height: 68px;
+    }
+
+
+    .item span {
+
+      display: block;
+
+      color: #8097ae;
+
+      font-size: 10px;
+
+      text-transform:
+        uppercase;
+
+      margin-bottom: 6px;
+    }
+
+
+    .item b {
+
+      font-size: 17px;
+    }
+
+
+    /* =====================================================
+       PIPELINE
+       ===================================================== */
+
+    .pipe {
+
+      display: flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      gap: 8px;
+
+      flex-wrap: wrap;
+
+      margin-top: 10px;
+    }
+
+
+    .node {
+
+      background: #10243a;
+
+      border:
+        1px solid
+        #294761;
+
+      padding:
+        12px 16px;
+
+      border-radius: 9px;
+
+      text-align:
+        center;
+    }
+
+
+    .node small {
+
+      display: block;
+
+      color: #8ca2b9;
+
+      margin-top: 3px;
+    }
+
+
+    .arrow {
+
+      color: #678099;
+
+      font-size: 20px;
+    }
+
+
+    .sec {
+
+      margin-top: 14px;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
+    @media (max-width: 900px) {
+
+      .g {
+
+        grid-template-columns:
+          1fr 1fr;
+      }
+
+
+      .main {
+
+        grid-template-columns:
+          1fr;
+      }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+      .g {
+
+        grid-template-columns:
+          1fr;
+      }
+
+
+      .pipe {
+
+        flex-direction:
+          column;
+      }
+
+
+      .arrow {
+
+        transform:
+          rotate(90deg);
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header class="h">
+
+    <div>
+
+      <div class="t">
+        AI-ML Intelligent Dead Reckoning
+      </div>
+
+      <div class="s">
+        SIH 26168 · Live Model 1 + Adaptive Model 2 + EKF
+      </div>
+
+    </div>
+
+
+    <div id="status">
+      ● Connecting
+    </div>
+
+  </header>
+
+
+  <div class="wrap">
+
+
+    <!-- ===================================================
+         TOP TELEMETRY
+         =================================================== -->
+
+    <div class="g">
+
+
+      <!-- MODEL 1 SPEED -->
+
+      <div class="card">
+
+        <div class="lab">
+          Model 1 Speed
+        </div>
+
+        <div class="val">
+
+          <span id="speed">
+            0.0
+          </span>
+
+          <small>
+            km/h
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- LEAN -->
+
+      <div class="card">
+
+        <div class="lab">
+          Lean
+        </div>
+
+        <div class="val">
+
+          <span id="lean">
+            0.0
+          </span>
+
+          <small>
+            °
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- FUSED SPEED -->
+
+      <div class="card">
+
+        <div class="lab">
+          Fused Speed
+        </div>
+
+        <div class="val">
+
+          <span id="fused">
+            0.0
+          </span>
+
+          <small>
+            km/h
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- HEADING -->
+
+      <div class="card">
+
+        <div class="lab">
+          Heading
+        </div>
+
+        <div class="val">
+
+          <span id="head">
+            0.0
+          </span>
+
+          <small>
+            °
+          </small>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+    <!-- ===================================================
+         LIVE PIPELINE
+         =================================================== -->
+
+    <div class="card sec">
+
+      <div class="lab">
+        LIVE PIPELINE
+      </div>
+
+
+      <div class="pipe">
+
+
+        <div class="node">
+
+          IMU
+
+          <small>
+            6-axis
+          </small>
+
+        </div>
+
+
+        <div class="arrow">
+          →
+        </div>
+
+
+        <div class="node">
+
+          MODEL 1
+
+          <small>
+            speed + lean
+          </small>
+
+        </div>
+
+
+        <div class="arrow">
+          →
+        </div>
+
+
+        <div class="node">
+
+          MODEL 2
+
+          <small>
+            adaptive Q/R
+          </small>
+
+        </div>
+
+
+        <div class="arrow">
+          →
+        </div>
+
+
+        <div class="node">
+
+          ADAPTIVE EKF
+
+          <small>
+            navigation
+          </small>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- ===================================================
+         MAIN
+         =================================================== -->
+
+    <div class="main">
+
+
+      <!-- =================================================
+           MAP
+           ================================================= -->
+
+      <div class="card">
+
+        <div class="lab">
+          LIVE NAVIGATION MAP
+        </div>
+
+        <div id="map"></div>
+
+      </div>
+
+
+      <!-- =================================================
+           RIGHT COLUMN
+           ================================================= -->
+
+      <div>
+
+
+        <!-- ===============================================
+             ADAPTIVE COVARIANCE
+             =============================================== -->
+
+        <div class="card">
+
+          <div class="lab">
+            ADAPTIVE COVARIANCE
+          </div>
+
+
+          <div class="grid2 sec">
+
+
+            <div class="item">
+
+              <span>
+                Alpha Q
+              </span>
+
+              <b id="q">
+                1.00
+              </b>
+
+            </div>
+
+
+            <div class="item">
+
+              <span>
+                Alpha R
+              </span>
+
+              <b id="r">
+                1.00
+              </b>
+
+            </div>
+
+
+            <div class="item">
+
+              <span>
+                NIS
+              </span>
+
+              <b id="nis">
+                —
+              </b>
+
+            </div>
+
+
+            <div class="item">
+
+              <span>
+                Model 2 Updates
+              </span>
+
+              <b id="m2">
+                0
+              </b>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             GNSS / FILTER
+             =============================================== -->
+
+        <div class="card sec">
+
+          <div class="lab">
+            GNSS / FILTER
+          </div>
+
+
+          <div class="grid2 sec">
+
+
+            <!-- STATUS -->
+
+            <div class="item">
+
+              <span>
+                Status
+              </span>
+
+              <b id="gps">
+                WAITING FOR GPS
+              </b>
+
+            </div>
+
+
+            <!-- GPS SOURCE -->
+
+            <div class="item">
+
+              <span>
+                GPS Source
+              </span>
+
+              <b id="gpsSource">
+                SEARCHING
+              </b>
+
+            </div>
+
+
+            <!-- ACCURACY -->
+
+            <div class="item">
+
+              <span>
+                Accuracy
+              </span>
+
+              <b>
+
+                <span id="acc">
+                  —
+                </span>
+
+                m
+
+              </b>
+
+            </div>
+
+
+            <!-- GPS SPEED -->
+
+            <div class="item">
+
+              <span>
+                GPS Speed
+              </span>
+
+              <b>
+
+                <span id="gpsSpeed">
+                  0.0
+                </span>
+
+                km/h
+
+              </b>
+
+            </div>
+
+
+            <!-- LATITUDE -->
+
+            <div class="item">
+
+              <span>
+                Latitude
+              </span>
+
+              <b id="gpsLat">
+                —
+              </b>
+
+            </div>
+
+
+            <!-- LONGITUDE -->
+
+            <div class="item">
+
+              <span>
+                Longitude
+              </span>
+
+              <b id="gpsLon">
+                —
+              </b>
+
+            </div>
+
+
+            <!-- SAMPLES -->
+
+            <div class="item">
+
+              <span>
+                Samples
+              </span>
+
+              <b id="samples">
+                0
+              </b>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             INNOVATION
+             =============================================== -->
+
+        <div class="card sec">
+
+          <div class="lab">
+            INNOVATION
+          </div>
+
+
+          <div class="grid2 sec">
+
+
+            <div class="item">
+
+              <span>
+                X
+              </span>
+
+              <b id="ix">
+                0
+              </b>
+
+              m
+
+            </div>
+
+
+            <div class="item">
+
+              <span>
+                Y
+              </span>
+
+              <b id="iy">
+                0
+              </b>
+
+              m
+
+            </div>
+
+
+            <div class="item">
+
+              <span>
+                Speed
+              </span>
+
+              <b id="iv">
+                0
+              </b>
+
+              m/s
+
+            </div>
+
+
+            <div class="item">
+
+              <span>
+                Local X/Y
+              </span>
+
+              <b>
+
+                <span id="x">
+                  0
+                </span>
+
+                /
+
+                <span id="y">
+                  0
+                </span>
+
+                m
+
+              </b>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       LEAFLET JS
+       ===================================================== -->
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
+
+
+  <script>
+
+
+    // =====================================================
+    // HELPER
+    // =====================================================
+
+    const el = id =>
+      document.getElementById(id);
+
+
+    function set(id, value) {
+
+      const element =
+        el(id);
+
+      if (element) {
+
+        element.textContent =
+          value;
+
+      }
+
+    }
+
+
+    // =====================================================
+    // MAP
+    // =====================================================
+
+    const map =
+      L.map(
+        "map"
+      ).setView(
+        [20.5937, 78.9629],
+        5
+      );
+
+
+    // =====================================================
+    // DARK MAP
+    //
+    // No Carto API key.
+    // No OpenStreetMap tile-server 403.
+    // =====================================================
+
+    L.tileLayer(
+
+      "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+
+      {
+
+        maxZoom:
+          16,
+
+        attribution:
+          "Tiles © Esri"
+
+      }
+
+    ).addTo(map);
+
+
+    // =====================================================
+    // MAP OBJECTS
+    // =====================================================
+
+    let line =
+      L.polyline(
+        [],
+        {
+          weight: 4
+        }
+      ).addTo(map);
+
+
+    let ekfMarker =
+      null;
+
+
+    let gpsMarker =
+      null;
+
+
+    let centered =
+      false;
+
+
+    let points =
+      [];
+
+
+    // =====================================================
+    // WEBSOCKET
+    // =====================================================
+
+    let ws =
+      null;
+
+
+    // =====================================================
+    // GPS SPEED CALCULATION
+    // =====================================================
+
+    let previousGPS =
+      null;
+
+
+    let previousGPSTime =
+      null;
+
+
+    // =====================================================
+    // LAPTOP / BROWSER GPS
+    // =====================================================
+
+    function startBrowserGPS() {
+
+
+      console.log(
+        "[GPS] Starting browser GPS..."
+      );
+
+
+      if (
+        !navigator.geolocation
+      ) {
+
+
+        console.log(
+          "[GPS] Geolocation unavailable."
+        );
+
+
+        set(
+          "gpsSource",
+          "UNAVAILABLE"
+        );
+
+
+        set(
+          "gps",
+          "GPS UNAVAILABLE"
+        );
+
+
+        return;
+
+      }
+
+
+      set(
+        "gpsSource",
+        "SEARCHING"
+      );
+
+
+      set(
+        "gps",
+        "SEARCHING FOR FIX"
+      );
+
+
+      navigator.geolocation.watchPosition(
+
+
+        function(position) {
+
+
+          const c =
+            position.coords;
+
+
+          const latitude =
+            Number(
+              c.latitude
+            );
+
+
+          const longitude =
+            Number(
+              c.longitude
+            );
+
+
+          const accuracy =
+            Number(
+              c.accuracy
+            );
+
+
+          // =================================================
+          // GPS SPEED
+          // =================================================
+
+          let speed =
+            null;
+
+
+          // Use browser-provided speed if available.
+
+          if (
+
+            c.speed !== null
+
+            &&
+
+            Number.isFinite(
+              Number(c.speed)
+            )
+
+            &&
+
+            Number(c.speed) >= 0
+
+          ) {
+
+
+            speed =
+              Number(
+                c.speed
+              );
+
+          }
+
+
+          // =================================================
+          // CALCULATE GPS SPEED IF NEEDED
+          // =================================================
+
+          const now =
+            Date.now();
+
+
+          if (
+
+            speed === null
+
+            &&
+
+            previousGPS !== null
+
+            &&
+
+            previousGPSTime !== null
+
+          ) {
+
+
+            const dt =
+              (
+                now
+                - previousGPSTime
+              )
+              / 1000.0;
+
+
+            if (
+              dt > 0
+            ) {
+
+
+              const lat1 =
+                previousGPS.latitude
+                *
+                Math.PI
+                /
+                180.0;
+
+
+              const lat2 =
+                latitude
+                *
+                Math.PI
+                /
+                180.0;
+
+
+              const dLat =
+                (
+                  latitude
+                  -
+                  previousGPS.latitude
+                )
+                *
+                Math.PI
+                /
+                180.0;
+
+
+              const dLon =
+                (
+                  longitude
+                  -
+                  previousGPS.longitude
+                )
+                *
+                Math.PI
+                /
+                180.0;
+
+
+              const R =
+                6371000.0;
+
+
+              const a =
+
+                Math.sin(
+                  dLat / 2
+                ) ** 2
+
+                +
+
+                Math.cos(lat1)
+                *
+                Math.cos(lat2)
+                *
+                Math.sin(
+                  dLon / 2
+                ) ** 2;
+
+
+              const distance =
+
+                2
+                *
+                R
+                *
+                Math.atan2(
+
+                  Math.sqrt(a),
+
+                  Math.sqrt(
+                    1 - a
+                  )
+
+                );
+
+
+              speed =
+                distance / dt;
+
+
+              // Ignore impossible GPS jumps.
+
+              if (
+                speed > 60
+              ) {
+
+                speed =
+                  null;
+
+              }
+
+            }
+
+          }
+
+
+          if (
+            speed === null
+          ) {
+
+            speed =
+              0;
+
+          }
+
+
+          // =================================================
+          // SAVE PREVIOUS GPS
+          // =================================================
+
+          previousGPS = {
+
+            latitude:
+              latitude,
+
+            longitude:
+              longitude
+
+          };
+
+
+          previousGPSTime =
+            now;
+
+
+          // =================================================
+          // SEND GPS TO FUSION.PY
+          // =================================================
+
+          if (
+
+            ws
+
+            &&
+
+            ws.readyState ===
+              WebSocket.OPEN
+
+          ) {
+
+
+            ws.send(
+
+              JSON.stringify({
+
+                type:
+                  "browser_gps",
+
+                latitude:
+                  latitude,
+
+                longitude:
+                  longitude,
+
+                accuracy:
+                  accuracy,
+
+                speed:
+                  speed
+
+              })
+
+            );
+
+          }
+
+
+          // =================================================
+          // UPDATE GPS UI
+          // =================================================
+
+          set(
+            "gpsSource",
+            "LAPTOP"
+          );
+
+
+          set(
+            "gps",
+            "GPS ACTIVE"
+          );
+
+
+          set(
+            "acc",
+            accuracy.toFixed(1)
+          );
+
+
+          set(
+            "gpsSpeed",
+            (
+              speed * 3.6
+            ).toFixed(1)
+          );
+
+
+          set(
+            "gpsLat",
+            latitude.toFixed(6)
+          );
+
+
+          set(
+            "gpsLon",
+            longitude.toFixed(6)
+          );
+
+
+          // =================================================
+          // GPS MARKER
+          // =================================================
+
+          const p = [
+
+            latitude,
+
+            longitude
+
+          ];
+
+
+          if (
+            !gpsMarker
+          ) {
+
+
+            gpsMarker =
+              L.circleMarker(
+
+                p,
+
+                {
+
+                  radius:
+                    7,
+
+                  weight:
+                    2
+
+                }
+
+              ).addTo(map);
+
+
+          }
+
+          else {
+
+
+            gpsMarker.setLatLng(
+              p
+            );
+
+          }
+
+
+          // =================================================
+          // CENTER MAP
+          // =================================================
+
+          if (
+            !centered
+          ) {
+
+
+            map.setView(
+              p,
+              17
+            );
+
+
+            centered =
+              true;
+
+          }
+
+
+          console.log(
+
+            "[GPS] LAPTOP:",
+
+            latitude,
+
+            longitude,
+
+            "| Accuracy:",
+
+            accuracy,
+
+            "m",
+
+            "| Speed:",
+
+            (
+              speed * 3.6
+            ).toFixed(2),
+
+            "km/h"
+
+          );
+
+        },
+
+
+        // ===================================================
+        // GPS ERROR
+        // ===================================================
+
+        function(error) {
+
+
+          console.log(
+
+            "[GPS ERROR]",
+
+            error.code,
+
+            error.message
+
+          );
+
+
+          set(
+            "gpsSource",
+            "NO FIX"
+          );
+
+
+          set(
+            "gps",
+            "GPS UNAVAILABLE"
+          );
+
+        },
+
+
+        // ===================================================
+        // GPS OPTIONS
+        // ===================================================
+
+        {
+
+          enableHighAccuracy:
+            true,
+
+          maximumAge:
+            1000,
+
+          timeout:
+            15000
+
+        }
+
+      );
+
+    }
+
+
+    // =====================================================
+    // UPDATE DASHBOARD FROM FUSION.PY
+    // =====================================================
+
+    function update(d) {
+
+
+      // ===================================================
+      // MODEL 1
+      // ===================================================
+
+      set(
+
+        "speed",
+
+        (
+          Number(
+            d.speed_kmh
+          ) || 0
+        ).toFixed(1)
+
+      );
+
+
+      set(
+
+        "lean",
+
+        (
+          Number(
+            d.lean_deg
+          ) || 0
+        ).toFixed(1)
+
+      );
+
+
+      // ===================================================
+      // EKF
+      // ===================================================
+
+      set(
+
+        "fused",
+
+        (
+          Number(
+            d.estimated_speed_kmh
+          ) || 0
+        ).toFixed(1)
+
+      );
+
+
+      set(
+
+        "head",
+
+        (
+          Number(
+            d.heading_deg
+          ) || 0
+        ).toFixed(1)
+
+      );
+
+
+      // ===================================================
+      // MODEL 2
+      // ===================================================
+
+      set(
+
+        "q",
+
+        (
+          Number(
+            d.alpha_q
+          ) || 1
+        ).toFixed(3)
+
+      );
+
+
+      set(
+
+        "r",
+
+        (
+          Number(
+            d.alpha_r
+          ) || 1
+        ).toFixed(3)
+
+      );
+
+
+      set(
+
+        "nis",
+
+        d.nis == null
+
+          ? "—"
+
+          : Number(
+              d.nis
+            ).toFixed(2)
+
+      );
+
+
+      set(
+
+        "m2",
+
+        d.model2_updates || 0
+
+      );
+
+
+      // ===================================================
+      // GPS
+      // ===================================================
+
+      if (
+        d.gps_accuracy_m != null
+      ) {
+
+
+        set(
+
+          "acc",
+
+          Number(
+            d.gps_accuracy_m
+          ).toFixed(1)
+
+        );
+
+      }
+
+
+      if (
+        d.gps_speed_kmh != null
+      ) {
+
+
+        set(
+
+          "gpsSpeed",
+
+          Number(
+            d.gps_speed_kmh
+          ).toFixed(1)
+
+        );
+
+      }
+
+
+      if (
+        d.gps_latitude != null
+      ) {
+
+
+        set(
+
+          "gpsLat",
+
+          Number(
+            d.gps_latitude
+          ).toFixed(6)
+
+        );
+
+      }
+
+
+      if (
+        d.gps_longitude != null
+      ) {
+
+
+        set(
+
+          "gpsLon",
+
+          Number(
+            d.gps_longitude
+          ).toFixed(6)
+
+        );
+
+      }
+
+
+      set(
+
+        "samples",
+
+        d.samples || 0
+
+      );
+
+
+      // ===================================================
+      // GPS SOURCE
+      // ===================================================
+
+      if (
+        d.gps_source
+      ) {
+
+
+        set(
+
+          "gpsSource",
+
+          d.gps_source
+
+        );
+
+      }
+
+
+      // ===================================================
+      // GPS STATUS
+      // ===================================================
+
+      if (
+        d.gps_used
+      ) {
+
+
+        set(
+
+          "gps",
+
+          "GPS USED"
+
+        );
+
+      }
+
+
+      else if (
+        d.gps_update
+      ) {
+
+
+        set(
+
+          "gps",
+
+          "GPS FIX / REJECTED"
+
+        );
+
+      }
+
+
+      else if (
+        d.gps_source
+        &&
+        d.gps_source !==
+          "NONE"
+      ) {
+
+
+        set(
+
+          "gps",
+
+          "GPS ACTIVE"
+
+        );
+
+      }
+
+
+      // ===================================================
+      // INNOVATION
+      // ===================================================
+
+      set(
+
+        "ix",
+
+        (
+          Number(
+            d.innovation_x
+          ) || 0
+        ).toFixed(2)
+
+      );
+
+
+      set(
+
+        "iy",
+
+        (
+          Number(
+            d.innovation_y
+          ) || 0
+        ).toFixed(2)
+
+      );
+
+
+      set(
+
+        "iv",
+
+        (
+          Number(
+            d.innovation_speed
+          ) || 0
+        ).toFixed(2)
+
+      );
+
+
+      // ===================================================
+      // LOCAL X/Y
+      // ===================================================
+
+      set(
+
+        "x",
+
+        (
+          Number(
+            d.x_m
+          ) || 0
+        ).toFixed(1)
+
+      );
+
+
+      set(
+
+        "y",
+
+        (
+          Number(
+            d.y_m
+          ) || 0
+        ).toFixed(1)
+
+      );
+
+
+      // ===================================================
+      // EKF POSITION ON MAP
+      // ===================================================
+
+      if (
+
+        d.latitude != null
+
+        &&
+
+        d.longitude != null
+
+      ) {
+
+
+        const p = [
+
+          Number(
+            d.latitude
+          ),
+
+          Number(
+            d.longitude
+          )
+
+        ];
+
+
+        points.push(
+          p
+        );
+
+
+        if (
+          points.length > 2000
+        ) {
+
+          points.shift();
+
+        }
+
+
+        line.setLatLngs(
+          points
+        );
+
+
+        if (
+          !ekfMarker
+        ) {
+
+
+          ekfMarker =
+            L.circleMarker(
+
+              p,
+
+              {
+
+                radius:
+                  8,
+
+                weight:
+                  2
+
+              }
+
+            ).addTo(map);
+
+
+        }
+
+        else {
+
+
+          ekfMarker.setLatLng(
+            p
+          );
+
+        }
+
+
+        if (
+          !centered
+        ) {
+
+
+          map.setView(
+            p,
+            17
+          );
+
+
+          centered =
+            true;
+
+        }
+
+      }
+
+    }
+
+
+    // =====================================================
+    // CONNECT TO FUSION SERVER
+    // =====================================================
+
+    function connect() {
+
+
+      console.log(
+        "[WS] Connecting..."
+      );
+
+
+      ws =
+        new WebSocket(
+          "ws://localhost:8765"
+        );
+
+
+      // ===================================================
+      // OPEN
+      // ===================================================
+
+      ws.onopen =
+        function() {
+
+
+          set(
+            "status",
+            "● LIVE"
+          );
+
+
+          el(
+            "status"
+          ).style.color =
+            "#4ade80";
+
+
+          console.log(
+            "[WS] Connected"
+          );
+
+
+          // Start GPS
+
+          startBrowserGPS();
+
+        };
+
+
+      // ===================================================
+      // RECEIVE TELEMETRY
+      // ===================================================
+
+      ws.onmessage =
+        function(event) {
+
+
+          try {
+
+
+            const data =
+              JSON.parse(
+                event.data
+              );
+
+
+            update(
+              data
+            );
+
+
+          }
+
+          catch(error) {
+
+
+            console.log(
+
+              "[TELEMETRY ERROR]",
+
+              error
+
+            );
+
+          }
+
+        };
+
+
+      // ===================================================
+      // CLOSED
+      // ===================================================
+
+      ws.onclose =
+        function() {
+
+
+          set(
+            "status",
+            "● Reconnecting"
+          );
+
+
+          el(
+            "status"
+          ).style.color =
+            "#fb7185";
+
+
+          setTimeout(
+
+            connect,
+
+            1500
+
+          );
+
+        };
+
+
+      // ===================================================
+      // ERROR
+      // ===================================================
+
+      ws.onerror =
+        function(error) {
+
+
+          console.log(
+
+            "[WS ERROR]",
+
+            error
+
+          );
+
+
+          el(
+            "status"
+          ).style.color =
+            "#fb7185";
+
+        };
+
+    }
+
+
+    // =====================================================
+    // START
+    // =====================================================
+
+    connect();
+
+
+  </script>
+
+</body>
+
+</html>
